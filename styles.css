@@ -36,7 +36,6 @@ nav {
     background: #276f34;
     padding: 1rem 0;
     width: 100%; /* Ajuste la largeur à 100% */
-    max-width: 1600px; /* Limite la largeur */
     margin: 0 auto; /* Centre la barre de navigation */
 }
 
@@ -54,7 +53,7 @@ nav a:hover {
 }
 
 .image{
-    width: 8%;
+    width: 12%;
     display: block;
     margin-left: auto;
     margin-right: auto;
