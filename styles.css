@@ -36,7 +36,9 @@ nav {
     background: #276f34;
     padding: 1rem 0;
     width: 100%; /* Ajuste la largeur à 100% */
+    max-width: 1600px; /* Limite la largeur */
     margin: 0 auto; /* Centre la barre de navigation */
+    flex-wrap:nowrap;
 }
 
 nav a {
@@ -225,7 +227,16 @@ section:nth-of-type(even) {
     flex-wrap: wrap;
     gap: 2rem;
 }
+@media (max-width: 768px) {
+    nav {
+        justify-content: space-between; /* Garde l'alignement horizontal */
+        padding: 0.5rem; /* Réduit l'espace pour mieux s'adapter */
+    }
 
+    nav a {
+        margin: 0 0.5rem; /* Réduit les marges pour éviter de dépasser sur mobile */
+    }
+}
 .section-content img {
     width: calc(50% - 1rem);
     height: auto;
