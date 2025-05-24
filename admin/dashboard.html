@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau de bord</title>
+  <script type="module" src="../admin/admin.js"></script>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <button id="logout">Déconnexion</button>
+
+  <section>
+    <h2>Éditer les textes</h2>
+    <select id="page-select"></select>
+    <textarea id="page-content" rows="10" cols="80"></textarea>
+    <button id="save-text">Enregistrer</button>
+  </section>
+
+  <section>
+    <h2>Gérer les images</h2>
+    <input type="file" id="image-upload" accept="image/*" />
+    <button id="upload-image">Téléverser</button>
+    <ul id="image-list"></ul>
+  </section>
+</body>
+</html>
+    

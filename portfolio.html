@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unity Vert - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- SUPABASE CLIENT -->
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+      // Tes identifiants Supabase
+      const SUPABASE_URL = 'https://jkasolurdoqvdhukxzgm.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+
+      // Création du client et exposé globalement
+      window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+    <!-- /SUPABASE CLIENT -->
+
 </head>
 <body>
     <header>
