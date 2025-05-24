@@ -14,7 +14,7 @@ const isLoginPage = location.pathname.endsWith('/admin/index.html');
 async function checkAuth() {
   const { data } = await supabase.auth.getSession();
   if (!data.session && !isLoginPage) {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
   }
   if (data.session && isLoginPage) {
     window.location.href = 'dashboard.html';
@@ -40,7 +40,7 @@ if (isLoginPage) {
 if (!isLoginPage) {
   // Déconnexion
   document.getElementById('logout')
-    .addEventListener('click', () => supabase.auth.signOut().then(() => window.location.href = 'login.html'));
+    .addEventListener('click', () => supabase.auth.signOut().then(() => window.location.href = 'index.html'));
 
   // Chargement des pages
   async function loadPages() {
