@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin • Unity Vert</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="admin.css">
+
+
+  <!-- Supabase client -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const SUPABASE_URL   = 'https://jkasolurdoqvdhukxzgm.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+    window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+  <!-- /Supabase client -->
+
+</head>
+<body class="admin-login">
+  <div class="admin-container">
+    <h1>Connexion Admin</h1>
+    <form id="login-form">
+      <label>
+        <span>Email</span>
+        <input type="email" id="email" required>
+      </label>
+      <label>
+        <span>Mot de passe</span>
+        <input type="password" id="password" required>
+      </label>
+      <button type="submit">Se connecter</button>
+    </form>
+    <p class="error" id="error-msg"></p>
+  </div>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

@@ -2,26 +2,48 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Tableau de bord</title>
-  <script type="module" src="../admin/admin.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard • Unity Vert</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="admin.css">
+
+
+  <!-- Supabase client (même que dans index.html) -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const SUPABASE_URL   = 'https://jkasolurdoqvdhukxzgm.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+    window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+  <!-- /Supabase client -->
+
 </head>
-<body>
-  <h1>Admin Dashboard</h1>
-  <button id="logout">Déconnexion</button>
+<body class="admin-dashboard">
+  <header class="admin-header">
+    <h1>Tableau de bord</h1>
+    <button id="logout">Déconnexion</button>
+  </header>
 
-  <section>
-    <h2>Éditer les textes</h2>
-    <select id="page-select"></select>
-    <textarea id="page-content" rows="10" cols="80"></textarea>
-    <button id="save-text">Enregistrer</button>
-  </section>
+  <main class="admin-main">
+    <section class="admin-section">
+      <h2>Éditer les textes</h2>
+      <div class="admin-form">
+        <select id="page-select"></select>
+        <textarea id="page-content" rows="10"></textarea>
+        <button id="save-text">Enregistrer</button>
+      </div>
+    </section>
 
-  <section>
-    <h2>Gérer les images</h2>
-    <input type="file" id="image-upload" accept="image/*" />
-    <button id="upload-image">Téléverser</button>
-    <ul id="image-list"></ul>
-  </section>
+    <section class="admin-section">
+      <h2>Gérer les images</h2>
+      <div class="admin-form">
+        <input type="file" id="image-upload" accept="image/*">
+        <button id="upload-image">Téléverser</button>
+      </div>
+      <ul id="image-list" class="admin-images-list"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="./admin.js"></script>
 </body>
 </html>
-    

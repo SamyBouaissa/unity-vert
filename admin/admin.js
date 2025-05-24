@@ -1,12 +1,15 @@
+// admin/admin.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 const SUPABASE_URL = 'https://jkasolurdoqvdhukxzgm.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Redirections selon la page et l’état de connexion
-const path = window.location.pathname;
-const isLoginPage = path.endsWith('login.html');
+// Si on est sur /admin/ sans préciser index.html
+if (location.pathname.endsWith('/admin/') || location.pathname.endsWith('/admin')) {
+  location.replace('index.html');
+}
+
+const isLoginPage = location.pathname.endsWith('/admin/index.html');
 
 async function checkAuth() {
   const { data } = await supabase.auth.getSession();
