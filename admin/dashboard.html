@@ -24,25 +24,19 @@
     <button id="logout">Déconnexion</button>
   </header>
 
-  <main class="admin-main">
-    <section class="admin-section">
-      <h2>Éditer les textes</h2>
-      <div class="admin-form">
-        <select id="page-select"></select>
-        <textarea id="page-content" rows="10"></textarea>
-        <button id="save-text">Enregistrer</button>
-      </div>
-    </section>
+  <div class="admin-main">
+    <aside class="sidebar">
+      <ul id="page-list"></ul>
+    </aside>
 
-    <section class="admin-section">
-      <h2>Gérer les images</h2>
-      <div class="admin-form">
-        <input type="file" id="image-upload" accept="image/*">
-        <button id="upload-image">Téléverser</button>
+    <section class="editor-pane">
+      <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+      <div class="editor-controls">
+        <button id="edit-mode">Mode édition</button>
+        <button id="save-changes">Enregistrer les modifications</button>
       </div>
-      <ul id="image-list" class="admin-images-list"></ul>
     </section>
-  </main>
+  </div>
 
   <script type="module" src="./admin.js"></script>
 </body>

@@ -1,106 +1,102 @@
-// admin/admin.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-const SUPABASE_URL = 'https://jkasolurdoqvdhukxzgm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+const SUPABASE_URL     = 'https://jkasolurdoqvdhukxzgm.supabase.co';
+const SUPABASE_ANON_KEY= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Si on est sur /admin/ sans préciser index.html
-if (location.pathname.endsWith('/admin/') || location.pathname.endsWith('/admin')) {
-  location.replace('index.html');
-}
+const path = window.location.pathname;
+const isLogin = path.endsWith('/admin/index.html');
 
-const isLoginPage = location.pathname.endsWith('/admin/index.html');
-
-async function checkAuth() {
-  const { data } = await supabase.auth.getSession();
-  if (!data.session && !isLoginPage) {
-    window.location.href = 'index.html';
+// 1️⃣ Préremplir l’email si déjà saisi
+document.addEventListener('DOMContentLoaded', () => {
+  const stored = localStorage.getItem('admin_email');
+  if (stored && isLogin) {
+    document.getElementById('email').value = stored;
   }
-  if (data.session && isLoginPage) {
-    window.location.href = 'dashboard.html';
-  }
-}
-checkAuth();
+});
 
-// --- LOGIN ---
-if (isLoginPage) {
+// 2️⃣ LOGIN
+if (isLogin) {
   document.getElementById('login-form')
     .addEventListener('submit', async e => {
       e.preventDefault();
-      const email = e.target.email.value;
-      const password = e.target.password.value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const emailEl = document.getElementById('email');
+      const pwdEl   = document.getElementById('password');
+      const email   = emailEl.value;
+      const pass    = pwdEl.value;
+
+      localStorage.setItem('admin_email', email);
+      const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
       if (error) {
         document.getElementById('error-msg').textContent = error.message;
+      } else {
+        // redirection vers dashboard
+        window.location.href = 'dashboard.html';
       }
     });
 }
 
-// --- DASHBOARD ---
-if (!isLoginPage) {
-  // Déconnexion
+// 3️⃣ DASHBOARD
+if (!isLogin) {
+  // 3.1 Sign-out
   document.getElementById('logout')
-    .addEventListener('click', () => supabase.auth.signOut().then(() => window.location.href = 'index.html'));
+    .addEventListener('click', () =>
+      supabase.auth.signOut().then(() => window.location.href = 'index.html')
+    );
 
-  // Chargement des pages
-  async function loadPages() {
-    const { data } = await supabase.from('pages_texts').select();
-    const select = document.getElementById('page-select');
-    data.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.page_slug;
-      opt.text = p.page_slug;
-      select.add(opt);
-    });
+  // 3.2 Liste des pages
+  const pages = [
+    { slug: 'index',      title: 'Accueil' },
+    { slug: 'prestations',title: 'Prestations' },
+    { slug: 'portfolio',  title: 'Portfolio' },
+    { slug: 'contact',    title: 'Contact' },
+  ];
+  const pageList = document.getElementById('page-list');
+  pages.forEach(p => {
+    const li = document.createElement('li');
+    li.textContent      = p.title;
+    li.dataset.slug     = p.slug;
+    li.addEventListener('click', () => loadPage(p.slug));
+    pageList.append(li);
+  });
+
+  let currentSlug = pages[0].slug;
+
+  // 3.3 Charger en mode “preview + édition”
+  const iframe = document.getElementById('preview');
+  async function loadPage(slug) {
+    currentSlug = slug;
+    iframe.src  = `../${slug}.html`;
+    // désactiver édition
+    editMode = false;
+    editBtn.textContent = 'Mode édition';
   }
-  loadPages();
 
-  // Afficher le contenu quand on change de page
-  document.getElementById('page-select')
-    .addEventListener('change', async e => {
-      const slug = e.target.value;
-      const { data } = await supabase
-        .from('pages_texts')
-        .select('content')
-        .eq('page_slug', slug)
-        .single();
-      document.getElementById('page-content').value = data.content;
-    });
+  // 3.4 Mode édition
+  let editMode = false;
+  const editBtn   = document.getElementById('edit-mode');
+  const saveBtn   = document.getElementById('save-changes');
 
-  // Enregistrer le texte
-  document.getElementById('save-text')
-    .addEventListener('click', async () => {
-      const slug = document.getElementById('page-select').value;
-      const content = document.getElementById('page-content').value;
-      await supabase.from('pages_texts')
-        .upsert({ page_slug: slug, content });
-      alert('Texte enregistré !');
-    });
+  editBtn.addEventListener('click', () => {
+    const doc       = iframe.contentDocument;
+    const container = doc.querySelector('.container');
+    if (!container) return alert('Zone éditable introuvable.');
+    editMode = !editMode;
+    container.contentEditable = editMode;
+    editBtn.textContent = editMode ? 'Quitter édition' : 'Mode édition';
+  });
 
-  // Gestion des images
-  async function listImages() {
-    const { data } = await supabase.storage.from('admin-images').list();
-    const ul = document.getElementById('image-list');
-    ul.innerHTML = '';
-    data.forEach(img => {
-      const li = document.createElement('li');
-      const url = supabase.storage.from('admin-images').getPublicUrl(img.name).data.publicUrl;
-      li.innerHTML = `<img src="${url}" width="100" /><br>${img.name}`;
-      ul.appendChild(li);
-    });
-  }
-  listImages();
+  // 3.5 Enregistrer la modif
+  saveBtn.addEventListener('click', async () => {
+    const doc       = iframe.contentDocument;
+    const container = doc.querySelector('.container');
+    const html      = container.innerHTML;
+    const { error } = await supabase
+      .from('pages_texts')
+      .upsert({ page_slug: currentSlug, content: html });
+    if (error) return alert('Erreur : ' + error.message);
+    alert('Modifications enregistrées !');
+  });
 
-  // Téléverser une image
-  document.getElementById('upload-image')
-    .addEventListener('click', async () => {
-      const file = document.getElementById('image-upload').files[0];
-      if (!file) return alert('Choisis un fichier d’abord.');
-      const { error } = await supabase.storage
-        .from('admin-images')
-        .upload(file.name, file, { upsert: true });
-      if (error) return alert(error.message);
-      await listImages();
-      alert('Image uploadée !');
-    });
+  // Démarrage sûr sur la première page
+  loadPage(currentSlug);
 }

@@ -59,5 +59,18 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const slug = location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const { data, error } = await supabase
+      .from('pages_texts')
+      .select('content')
+      .eq('page_slug', slug)
+      .single();
+    if (!error && data?.content) {
+      document.querySelector('.container').innerHTML = data.content;
+    }
+  });
+</script>
 </body>
 </html>
