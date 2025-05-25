@@ -29,14 +29,17 @@
       <ul id="page-list"></ul>
     </aside>
 
-    <section class="editor-pane">
-      <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
-      <div class="editor-controls">
-        <button id="edit-mode">Mode édition</button>
-        <button id="save-changes">Enregistrer les modifications</button>
-      </div>
-    </section>
+<section class="editor-pane">
+  <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+  <div class="editor-controls">
+    <button id="edit-mode">Mode édition</button>
+    <button id="save-changes">Enregistrer</button>
+
+    <!-- Nouveauté : insertion d'image -->
+    <input type="file" id="image-upload" accept="image/*">
+    <button id="insert-image">Insérer image</button>
   </div>
+</section>
 
   <script type="module" src="./admin.js"></script>
 </body>
