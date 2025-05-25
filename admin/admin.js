@@ -4,8 +4,12 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // ————— Supabase init —————
 const SUPABASE_URL      = 'https://jkasolurdoqvdhukxzgm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+console.log('→ Supabase URL :', SUPABASE_URL);
+console.log('→ Supabase ANON KEY (début) :', SUPABASE_ANON_KEY.slice(0,10) + '…');
+console.log('→ Supabase client ready:', typeof supabase.auth.signInWithPassword);
 
 // ————— Détection de page —————
 const path    = window.location.pathname;
