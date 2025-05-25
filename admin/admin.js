@@ -54,7 +54,7 @@ if (isLogin) {
       const password   = passEl.value;
 
       // mémorisation éventuelle de l’email
-      if (rememberEl.checked) {
+      if (rememberEl?.checked) {
         localStorage.setItem('admin_email', email);
       } else {
         localStorage.removeItem('admin_email');

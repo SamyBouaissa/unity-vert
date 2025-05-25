@@ -21,19 +21,20 @@
 <body class="admin-login">
   <div class="admin-container">
     <h1>Connexion Admin</h1>
-    <form id="login-form">
-      <label>
-        <span>Email</span>
-        <input type="email" id="email" required>
+    <form id="login-form" autocomplete="on">
+      <label>Email
+        <input type="email" id="email" name="email" autocomplete="username" required>
       </label>
-      <label>
-        <span>Mot de passe</span>
-        <input type="password" id="password" required>
+      <label>Mot de passe
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </label>
+      <label class="remember-me">
+        <input type="checkbox" id="remember" name="remember">
+        Se souvenir de moi
       </label>
       <button type="submit">Se connecter</button>
     </form>
-    <p class="error" id="error-msg"></p>
-  </div>
+    <div id="error-msg" class="error"></div>
 
   <script type="module" src="./admin.js"></script>
 </body>
