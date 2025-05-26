@@ -203,32 +203,40 @@ if (!isLogin) {
   });
 
   // Upload & insert image with site’s gallery-img class
-  insertBtn.addEventListener('click', async () => {
-    if (!editMode) return alert('Active d’abord le mode édition.');
-    const file = fileInput.files[0];
-    if (!file) return alert('Choisis un fichier image.');
+insertBtn.addEventListener('click', async () => {
+  if (!editMode) return alert('Active d’abord le mode édition.');
+  const file = fileInput.files[0];
+  if (!file) return alert('Choisis un fichier image.');
 
-    // sanitize filename
-    const safeName = file.name.replace(/[^\w.\-]/g,'_');
-    const { error: upErr } = await supabase.storage
-      .from('admin-images')
-      .upload(safeName, file, { upsert: true });
-    if (upErr) return alert('Upload échoué : ' + upErr.message);
+  // sanitize filename
+  const safeName = file.name.replace(/[^\w.\-]/g,'_');
+  const { error: upErr } = await supabase
+    .storage
+    .from('admin-images')
+    .upload(safeName, file, { upsert: true });
+  if (upErr) return alert('Upload échoué : ' + upErr.message);
 
-    const { data:{ publicUrl } } = supabase.storage
-      .from('admin-images')
-      .getPublicUrl(safeName);
+  const { data:{ publicUrl } } = supabase
+    .storage
+    .from('admin-images')
+    .getPublicUrl(safeName);
 
-    alert('Image stockée sous :\n' + publicUrl);
+  // alert facultative
+  alert('Image stockée sous :\n' + publicUrl);
 
-    // Insert with the same class your site uses
-    const doc       = iframe.contentDocument;
-    const container = doc.querySelector('.container');
-    container.insertAdjacentHTML('beforeend',
-      `<img src="${publicUrl}" alt="${safeName}"
-            class="gallery-img" />`
-    );
-    fileInput.value = '';
+  // on choisit la galerie si elle existe, sinon la container principale
+  const doc       = iframe.contentDocument;
+  const gallery   = doc.querySelector('.gallery');
+  const container = doc.querySelector('.container');
+  const html      = `<img src="${publicUrl}" alt="${safeName}" class="gallery-img" />`;
+
+  if (gallery) {
+    gallery.insertAdjacentHTML('beforeend', html);
+  } else {
+    container.insertAdjacentHTML('beforeend', html);
+  }
+
+  fileInput.value = '';
   });
 
   // Initial load
