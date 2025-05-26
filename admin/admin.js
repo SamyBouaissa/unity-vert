@@ -139,6 +139,16 @@ if (!isLogin) {
     link.href = '../styles.css';
     doc.head.appendChild(link);
 
+    // === NOUVEAU : reset de body ===
+    const reset = doc.createElement('style');
+    reset.textContent = `
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    `;
+    doc.head.appendChild(reset);
+
     // 2) disable edit by default
     const container = doc.querySelector('.container');
     container?.setAttribute('contentEditable','false');
