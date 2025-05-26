@@ -4,7 +4,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // — Supabase init —
 const SUPABASE_URL      = 'https://jkasolurdoqvdhukxzgm.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // — Debug —
@@ -17,7 +17,7 @@ const isLogin = path.endsWith('/admin/') || path.endsWith('/admin/index.html');
 
 // — Auth guard —
 async function checkAuthOrRedirect() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data:{ session } } = await supabase.auth.getSession();
   if (!session) window.location.replace('index.html');
 }
 if (!isLogin) checkAuthOrRedirect();
@@ -25,14 +25,14 @@ if (!isLogin) checkAuthOrRedirect();
 // — Login prefilling & redirect —
 document.addEventListener('DOMContentLoaded', async () => {
   if (isLogin) {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data:{ session } } = await supabase.auth.getSession();
     if (session) {
       window.location.replace('dashboard.html');
       return;
     }
     const saved = localStorage.getItem('admin_email');
     if (saved) {
-      document.getElementById('email').value    = saved;
+      document.getElementById('email').value      = saved;
       document.getElementById('remember').checked = true;
     }
   }
@@ -69,12 +69,12 @@ if (!isLogin) {
 
   // Pages list
   const pages = [
-    { slug: 'index',       title: 'Accueil'     },
-    { slug: 'prestations', title: 'Prestations' },
-    { slug: 'portfolio',   title: 'Portfolio'   },
-    { slug: 'contact',     title: 'Contact'     },
+    { slug:'index',       title:'Accueil'     },
+    { slug:'prestations', title:'Prestations' },
+    { slug:'portfolio',   title:'Portfolio'   },
+    { slug:'contact',     title:'Contact'     },
   ];
-  const titleMap = pages.reduce((m,p) => (m[p.slug] = p.title, m), {});
+  const titleMap = pages.reduce((m,p) => (m[p.slug]=p.title, m), {});
 
   // Sidebar
   const pageListEl = document.getElementById('page-list');
@@ -92,32 +92,76 @@ if (!isLogin) {
   });
 
   // Dashboard elements
-  let   currentSlug   = pages[0].slug;
-  const editorTitle   = document.getElementById('editor-title');
-  const iframe        = document.getElementById('preview');
-  const editBtn       = document.getElementById('edit-mode');
-  const saveBtn       = document.getElementById('save-changes');
-  const fileInput     = document.getElementById('image-upload');
-  const insertBtn     = document.getElementById('insert-image');
-  let   editMode      = false;
-  let   draggedImg    = null;
+  let   currentSlug = pages[0].slug;
+  const editorTitle = document.getElementById('editor-title');
+  const iframe      = document.getElementById('preview');
+  const editBtn     = document.getElementById('edit-mode');
+  const saveBtn     = document.getElementById('save-changes');
+  const fileInput   = document.getElementById('image-upload');
+  const insertBtn   = document.getElementById('insert-image');
+  let   editMode    = false;
+  let   draggedImg  = null;
 
-  // Inject public CSS + intercept nav clicks + disable edit by default
+  // --- Delegated image handlers ---
+  function onContainerClick(e) {
+    if (!editMode) return;
+    const img = e.target.closest('img.admin-image');
+    if (!img) return;
+    e.preventDefault();
+    if (confirm('Supprimer cette image ?')) {
+      img.remove();
+    }
+  }
+  function onImgDragStart(e) {
+    if (!editMode) return;
+    const img = e.target.closest('img.admin-image');
+    if (!img) return;
+    draggedImg = img;
+  }
+  function onContainerDragOver(e) {
+    if (!editMode) return;
+    if (e.target.closest('img.admin-image')) {
+      e.preventDefault();
+    }
+  }
+  function onContainerDrop(e) {
+    if (!editMode) return;
+    const img = e.target.closest('img.admin-image');
+    if (img && draggedImg && draggedImg !== img) {
+      e.preventDefault();
+      img.parentNode.insertBefore(draggedImg, img.nextSibling);
+    }
+  }
+
+  // Inject CSS + set up delegation each time iframe loads
   iframe.addEventListener('load', () => {
     const doc = iframe.contentDocument;
     if (!doc) return;
+    // inject public CSS
     const link = doc.createElement('link');
     link.rel  = 'stylesheet';
     link.href = '../styles.css';
     doc.head.appendChild(link);
-    doc.querySelector('.container')?.setAttribute('contentEditable','false');
+    // disable edit by default
+    const container = doc.querySelector('.container');
+    container?.setAttribute('contentEditable','false');
 
-    // Intercept in-iframe nav clicks
+    // attach delegated listeners
+    container?.removeEventListener('click', onContainerClick);
+    container?.removeEventListener('dragstart', onImgDragStart);
+    container?.removeEventListener('dragover', onContainerDragOver);
+    container?.removeEventListener('drop', onContainerDrop);
+
+    container?.addEventListener('click', onContainerClick);
+    container?.addEventListener('dragstart', onImgDragStart);
+    container?.addEventListener('dragover', onContainerDragOver);
+    container?.addEventListener('drop', onContainerDrop);
+
+    // intercept iframe nav
     doc.querySelectorAll('nav a').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
         const slug = a.getAttribute('href').replace('.html','');
-        // Sync sidebar + title
         document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
         const target = document.querySelector(`.sidebar li[data-slug="${slug}"]`);
         if (target) target.classList.add('active');
@@ -129,38 +173,10 @@ if (!isLogin) {
   // Load a page in the iframe
   function loadPage(slug) {
     currentSlug = slug;
-    editorTitle.textContent = `Édition : ${titleMap[slug] || slug}`;
+    editorTitle.textContent = `Édition : ${titleMap[slug]||slug}`;
     iframe.src = `../${slug}.html`;
-    editMode   = false;
+    editMode = false;
     editBtn.textContent = 'Mode édition';
-  }
-
-  // Image editing helpers
-  function setupImageEditing() {
-    const doc = iframe.contentDocument;
-    doc.querySelectorAll('.container img').forEach(img => {
-      img.draggable = true;
-      img.style.cursor = 'move';
-      img.addEventListener('dragstart', () => { draggedImg = img; });
-      img.addEventListener('dragover', e => e.preventDefault());
-      img.addEventListener('drop', e => {
-        e.preventDefault();
-        if (draggedImg && draggedImg !== img) {
-          img.parentNode.insertBefore(draggedImg, img.nextSibling);
-        }
-      });
-      img.addEventListener('click', () => {
-        if (editMode && confirm('Supprimer cette image ?')) img.remove();
-      });
-    });
-  }
-  function teardownImageEditing() {
-    const doc = iframe.contentDocument;
-    doc.querySelectorAll('.container img').forEach(img => {
-      img.removeAttribute('draggable');
-      img.style.cursor = '';
-      img.replaceWith(img.cloneNode(true));
-    });
   }
 
   // Toggle edit mode
@@ -171,16 +187,13 @@ if (!isLogin) {
     editMode = !editMode;
     container.contentEditable = editMode;
     editBtn.textContent = editMode ? 'Quitter édition' : 'Mode édition';
-    if (editMode) setupImageEditing(); else teardownImageEditing();
   });
 
-  // Save changes (text + images order)
+  // Save changes
   saveBtn.addEventListener('click', async () => {
-    console.log(`[Admin] Saving slug: ${currentSlug}`);
     const doc = iframe.contentDocument;
     const container = doc?.querySelector('.container');
     if (!container) return alert('Zone éditable introuvable.');
-
     const html = container.innerHTML;
     const { error } = await supabase
       .from('pages_texts')
@@ -192,35 +205,31 @@ if (!isLogin) {
     alert('Modifications enregistrées sur : ' + currentSlug);
   });
 
-  // Upload & insert image at fixed size
+  // Upload & insert image with inline style
   insertBtn.addEventListener('click', async () => {
     if (!editMode) return alert('Active d’abord le mode édition.');
     const file = fileInput.files[0];
     if (!file) return alert('Choisis un fichier image.');
 
-    // sanitize filename
     const safeName = file.name.replace(/[^\w.\-]/g,'_');
     const { error: upErr } = await supabase.storage
       .from('admin-images')
       .upload(safeName, file, { upsert: true });
     if (upErr) return alert('Upload échoué : ' + upErr.message);
 
-    const { data: { publicUrl } } = supabase
-      .storage
+    const { data:{ publicUrl } } = supabase.storage
       .from('admin-images')
       .getPublicUrl(safeName);
 
-    // show where it’s stored
-    alert('Image stockée dans admin-images bucket sous :\n' + publicUrl);
+    alert('Image stockée sous :\n' + publicUrl);
 
-    // insert with fixed width class
-    const doc = iframe.contentDocument;
+    const doc       = iframe.contentDocument;
     const container = doc.querySelector('.container');
     container.insertAdjacentHTML('beforeend',
-      `<img src="${publicUrl}" alt="${safeName}" class="admin-image" />`
+      `<img src="${publicUrl}" alt="${safeName}"
+            class="admin-image"
+            style="width:200px;height:auto;margin:0.5rem;cursor:move;" />`
     );
-    // hook new image
-    setupImageEditing();
     fileInput.value = '';
   });
 

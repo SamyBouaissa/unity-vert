@@ -1,12 +1,12 @@
 /* admin.css */
 
-/* Variables de couleurs et typo */
+/* — Variables de couleurs et typo — */
 :root {
   --bg-light: #f5f7fa;
   --bg-white: #ffffff;
   --text-default: #333333;
-  --primary: #007bff;
-  --primary-hover: #0069d9;
+  --primary: #e0e0e0;         /* Gris pastel pour header */
+  --primary-hover: #cccccc;
   --success: #28a745;
   --success-hover: #218838;
   --danger: #dc3545;
@@ -15,7 +15,7 @@
   --font: 'Roboto', sans-serif;
 }
 
-/* Reset & base */
+/* — Reset & base — */
 html, body {
   margin: 0;
   padding: 0;
@@ -97,25 +97,26 @@ html, body {
 }
 
 /* ===== Tableau de bord (/admin/dashboard.html) ===== */
-/* header */
+
+/* Header */
 .admin-header {
   background-color: var(--primary);
-  color: #fff;
-  padding: 0.75rem 1.5rem;
+  color: var(--text-default);
+  padding: 0.5rem 1rem;      /* moins de padding vertical */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 .admin-header h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 .admin-header button {
   background-color: var(--danger);
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -124,20 +125,20 @@ html, body {
   background-color: var(--danger-hover);
 }
 
-/* main area */
+/* Main layout */
 .admin-main {
-  display: flex;
   flex: 1;
+  display: flex;
   overflow: hidden;
 }
 
-/* sidebar */
+/* Sidebar */
 .sidebar {
-  width: 200px;
+  width: 180px;              /* un peu plus étroit */
   background: var(--bg-white);
   border-right: 1px solid var(--border);
   padding: 1rem;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+  box-shadow: 1px 0 3px rgba(0,0,0,0.05);
   overflow-y: auto;
 }
 .sidebar ul {
@@ -146,21 +147,23 @@ html, body {
   padding: 0;
 }
 .sidebar li {
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  padding: 0.6rem 0.75rem;    /* moins de padding, alignement left */
+  margin-bottom: 0.25rem;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  text-align: left;
+  transition: background-color 0.2s ease, font-weight 0.2s;
+  font-size: 0.95rem;
 }
 .sidebar li:hover {
-  background-color: rgba(0,123,255,0.1);
+  background-color: var(--primary-hover);
 }
 .sidebar li.active {
-  background-color: rgba(0,123,255,0.2);
-  font-weight: 600;
+  background-color: var(--primary-hover);
+  font-weight: bold;
 }
 
-/* editor pane */
+/* Editor pane */
 .editor-pane {
   flex: 1;
   display: flex;
@@ -169,24 +172,25 @@ html, body {
 }
 .editor-title {
   margin: 0;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   background: var(--bg-white);
   border-bottom: 1px solid var(--border);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 #preview {
   flex: 1;
   border: none;
-  min-height: 0;
+  padding: 0.5rem;           /* petit padding autour */
+  background: var(--bg-white);
+  overflow: auto;
 }
 
-/* controls under iframe */
+/* Controls */
 .editor-controls {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   background: var(--bg-white);
   border-top: 1px solid var(--border);
 }
@@ -196,8 +200,9 @@ html, body {
 .editor-controls button {
   border: none;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
+  font-size: 0.95rem;
   font-weight: 500;
 }
 #edit-mode {
@@ -213,9 +218,9 @@ html, body {
   color: #fff;
 }
 
-/* fixed-size for inserted images */
+/* Fixed size for inserted images */
 .admin-image {
-  width: 250px;
+  width: 200px;             /* taille plus raisonnable */
   height: auto;
   margin: 0.5rem;
   border: 1px solid var(--border);
@@ -225,10 +230,7 @@ html, body {
 
 /* Responsive fallback */
 @media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-  .admin-main {
-    flex-direction: column;
-  }
+  .sidebar { display: none; }
+  .admin-main { flex-direction: column; }
 }
+  
