@@ -18,7 +18,16 @@
   --border: #cccccc;
   --font: 'Roboto', sans-serif;
 }
+/* — Rendre le titre “Tableau de bord” visible — */
+.admin-header h1 {
+  color: var(--text-default);  /* remplace par #333 ou la couleur qui contraste */
+}
 
+/* — Optionnel : assouplir le bleu trop vif de la sidebar active — */
+.sidebar li.active {
+  background-color: #17a2b8;   /* un bleu-vert plus doux, ou var(--insert-bg) */
+  color: #fff;                 /* texte en blanc pour le contraste */
+}
 /* — Reset & base — */
 html, body {
   margin: 0;

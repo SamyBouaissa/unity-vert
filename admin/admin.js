@@ -102,62 +102,59 @@ if (!isLogin) {
   let   editMode    = false;
   let   draggedImg  = null;
 
-  // --- Delegated image handlers ---
+  // Delegated image handlers
   function onContainerClick(e) {
     if (!editMode) return;
-    const img = e.target.closest('img.admin-image');
+    const img = e.target.closest('img.gallery-img');
     if (!img) return;
     e.preventDefault();
-    if (confirm('Supprimer cette image ?')) {
-      img.remove();
-    }
+    if (confirm('Supprimer cette image ?')) img.remove();
   }
   function onImgDragStart(e) {
     if (!editMode) return;
-    const img = e.target.closest('img.admin-image');
+    const img = e.target.closest('img.gallery-img');
     if (!img) return;
     draggedImg = img;
   }
   function onContainerDragOver(e) {
     if (!editMode) return;
-    if (e.target.closest('img.admin-image')) {
-      e.preventDefault();
-    }
+    if (e.target.closest('img.gallery-img')) e.preventDefault();
   }
   function onContainerDrop(e) {
     if (!editMode) return;
-    const img = e.target.closest('img.admin-image');
+    const img = e.target.closest('img.gallery-img');
     if (img && draggedImg && draggedImg !== img) {
       e.preventDefault();
       img.parentNode.insertBefore(draggedImg, img.nextSibling);
     }
   }
 
-  // Inject CSS + set up delegation each time iframe loads
+  // Inject site CSS, intercept nav, and install delegation
   iframe.addEventListener('load', () => {
     const doc = iframe.contentDocument;
     if (!doc) return;
-    // inject public CSS
+    // 1) link your main styles.css
     const link = doc.createElement('link');
     link.rel  = 'stylesheet';
     link.href = '../styles.css';
     doc.head.appendChild(link);
-    // disable edit by default
+
+    // 2) disable edit by default
     const container = doc.querySelector('.container');
     container?.setAttribute('contentEditable','false');
 
-    // attach delegated listeners
-    container?.removeEventListener('click', onContainerClick);
-    container?.removeEventListener('dragstart', onImgDragStart);
+    // 3) install delegated listeners once
+    container?.removeEventListener('click',    onContainerClick);
+    container?.removeEventListener('dragstart',onImgDragStart);
     container?.removeEventListener('dragover', onContainerDragOver);
-    container?.removeEventListener('drop', onContainerDrop);
+    container?.removeEventListener('drop',     onContainerDrop);
 
-    container?.addEventListener('click', onContainerClick);
-    container?.addEventListener('dragstart', onImgDragStart);
+    container?.addEventListener('click',    onContainerClick);
+    container?.addEventListener('dragstart',onImgDragStart);
     container?.addEventListener('dragover', onContainerDragOver);
-    container?.addEventListener('drop', onContainerDrop);
+    container?.addEventListener('drop',     onContainerDrop);
 
-    // intercept iframe nav
+    // 4) intercept in-iframe nav links
     doc.querySelectorAll('nav a').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
@@ -170,7 +167,7 @@ if (!isLogin) {
     });
   });
 
-  // Load a page in the iframe
+  // Load a page into the iframe
   function loadPage(slug) {
     currentSlug = slug;
     editorTitle.textContent = `Édition : ${titleMap[slug]||slug}`;
@@ -205,12 +202,13 @@ if (!isLogin) {
     alert('Modifications enregistrées sur : ' + currentSlug);
   });
 
-  // Upload & insert image with inline style
+  // Upload & insert image with site’s gallery-img class
   insertBtn.addEventListener('click', async () => {
     if (!editMode) return alert('Active d’abord le mode édition.');
     const file = fileInput.files[0];
     if (!file) return alert('Choisis un fichier image.');
 
+    // sanitize filename
     const safeName = file.name.replace(/[^\w.\-]/g,'_');
     const { error: upErr } = await supabase.storage
       .from('admin-images')
@@ -223,16 +221,16 @@ if (!isLogin) {
 
     alert('Image stockée sous :\n' + publicUrl);
 
+    // Insert with the same class your site uses
     const doc       = iframe.contentDocument;
     const container = doc.querySelector('.container');
     container.insertAdjacentHTML('beforeend',
       `<img src="${publicUrl}" alt="${safeName}"
-            class="admin-image"
-            style="width:200px;height:auto;margin:0.5rem;cursor:move;" />`
+            class="gallery-img" />`
     );
     fileInput.value = '';
   });
 
-  // initial load
+  // Initial load
   loadPage(currentSlug);
 }
