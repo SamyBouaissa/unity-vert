@@ -283,3 +283,12 @@ html, body, .admin-dashboard {
 #edit-mode { background: #ffc107; }
 #save-changes { background: #28a745; color: #fff; border: none; }
 #insert-image { background: var(--primary); color: #fff; border: none; }
+
+/* titre d’édition au-dessus de l’iframe */
+.editor-title {
+  margin: 0;
+  padding: .75rem 1rem;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem;
+}

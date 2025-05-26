@@ -25,22 +25,28 @@
   </header>
 
   <div class="admin-main">
-    <aside class="sidebar">
+    <nav class="sidebar">
       <ul id="page-list"></ul>
-    </aside>
+    </nav>
 
-<section class="editor-pane">
-  <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
-  <div class="editor-controls">
-    <button id="edit-mode">Mode édition</button>
-    <button id="save-changes">Enregistrer</button>
+    <section class="editor-pane">
+      <!-- ⚠️ Titre qui montre quelle page on édite -->
+      <h2 id="editor-title" class="editor-title">Édition : Accueil</h2>
 
-    <!-- Nouveauté : insertion d'image -->
-    <input type="file" id="image-upload" accept="image/*">
-    <button id="insert-image">Insérer image</button>
+      <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+
+      <div class="editor-controls">
+        <button id="edit-mode">Mode édition</button>
+        <button id="save-changes">Enregistrer</button>
+
+        <!-- upload / insertion d'image -->
+        <input type="file" id="image-upload" accept="image/*">
+        <button id="insert-image">Insérer image</button>
+      </div>
+    </section>
   </div>
-</section>
 
+  <!-- ton JS d’admin : il importe supabase et fait tout -->
   <script type="module" src="./admin.js"></script>
 </body>
 </html>
