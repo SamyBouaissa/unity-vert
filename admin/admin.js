@@ -131,23 +131,34 @@ if (!isLogin) {
 
   // Inject site CSS, intercept nav, and install delegation
   iframe.addEventListener('load', () => {
-    const doc = iframe.contentDocument;
-    if (!doc) return;
-    // 1) link your main styles.css
-    const link = doc.createElement('link');
-    link.rel  = 'stylesheet';
-    link.href = '../styles.css';
-    doc.head.appendChild(link);
+  const doc = iframe.contentDocument;
+  if (!doc) return;
 
-    // === NOUVEAU : reset de body ===
-    const reset = doc.createElement('style');
-    reset.textContent = `
-      body {
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-    `;
-    doc.head.appendChild(reset);
+  // 1) Lien vers ton styles.css
+  const link = doc.createElement('link');
+  link.rel  = 'stylesheet';
+  link.href = '../styles.css';
+  doc.head.appendChild(link);
+
+  // 2) Reset marges du body
+  const reset = doc.createElement('style');
+  reset.textContent = `
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  `;
+  doc.head.appendChild(reset);
+
+  // 3) **OVERRIDE** le padding des sections
+  const override = doc.createElement('style');
+  override.textContent = `
+    /* supprime le 4rem vertical sur toutes les sections */
+    section {
+      padding: 0 !important;
+    }
+  `;
+  doc.head.appendChild(override);
 
     // 2) disable edit by default
     const container = doc.querySelector('.container');
