@@ -139,12 +139,6 @@ html, body {
   background-color: var(--danger-hover);
 }
 
-/* main layout */
-.admin-main {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
 
 /* sidebar */
 .sidebar {
@@ -177,6 +171,13 @@ html, body {
 }
 
 /* editor pane */
+/* — Garde ces deux-là pour ton layout — */
+.admin-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 .editor-pane {
   flex: 1;
   display: flex;
@@ -184,12 +185,20 @@ html, body {
   overflow: hidden;
   min-height: 0;
 }
+
+/* — Remplace complètement cette règle par la suivante — */
 .editor-title {
-  margin: 0;
-  padding: 0.75rem 1rem;
-  background: var(--bg-white);
+  margin: 0;                      /* on vire tout margin ajouté ailleurs */
+  padding: 0.25rem 1rem;          /* on réduit le vertical à 0.25rem */
+  background: var(--bg-white);    /* fond blanc pour masquer le gris */
   border-bottom: 1px solid var(--border);
   font-size: 1.2rem;
+}
+
+/* — Et, pour être sûr que derrière tout ça c’est blanc, ajoute : */
+.admin-main,
+.editor-pane {
+  background-color: var(--bg-white) !important;
 }
 #preview {
   flex: 1;
