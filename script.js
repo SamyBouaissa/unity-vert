@@ -1,24 +1,27 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById("modal");
-    const modalImg = document.getElementById("modal-img");
-    const images = document.querySelectorAll(".gallery-img");
-    const span = document.getElementsByClassName("close")[0];
+  const modal    = document.getElementById("modal");
+  const modalImg = document.getElementById("modal-img");
+  const images   = document.querySelectorAll(".gallery-img");
+  const closeBtn = document.getElementsByClassName("close")[0];
 
-    images.forEach(img => {
-        img.onclick = function() {
-            modal.style.display = "block";
-            modalImg.src = this.src;
-        }
+  images.forEach(img => {
+    img.addEventListener('click', function(e) {
+      // ouvre la lightbox via la classe .open
+      modalImg.src = this.src;
+      modal.classList.add('open');
     });
+  });
 
-    span.onclick = function() { 
-        modal.style.display = "none";
-    }
+  // fermeture au clic sur la croix
+  closeBtn.addEventListener('click', function() {
+    modal.classList.remove('open');
+  });
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
+  // fermeture au clic en-dehors de l'image
+  window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+      modal.classList.remove('open');
     }
+  });
 });
