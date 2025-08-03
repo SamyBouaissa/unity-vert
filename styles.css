@@ -273,25 +273,40 @@ section:nth-of-type(even) {
         margin-right: 0;
     }
 }
-/* Modal */
+/* === Modal (plein écran, centré) === */
 .modal {
     display: none;
     position: fixed;
     z-index: 1000;
-    padding-top: 60px;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.9);
+    left: 0;
+    width: 100vw;               /* toute la largeur */
+    height: 100vh;              /* toute la hauteur */
+    background-color: rgba(0, 0, 0, 0.9);
+    
+    /* passe en flex pour centrer l’image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* plus de padding qui forçait du scroll */
+    padding: 0;
+    overflow: hidden;           /* plus de scroll externe */
 }
 
+/* === Contenu du modal : on force un fitting à l’écran === */
 .modal-content {
-    margin: auto;
+    /* on retire width:80% et max-width:700px */
+    width: auto;
+    height: auto;
+
+    /* on contraint la taille au viewport */
+    max-width: 90vw;
+    max-height: 90vh;
+    
+    /* centre au cas où */
+    margin: 0 auto;
     display: block;
-    width: 80%;
-    max-width: 700px;
 }
 
 .close {

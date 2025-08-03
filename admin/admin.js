@@ -169,29 +169,28 @@ function onContainerClick(e) {
   `;
   doc.head.appendChild(override);
 
-  doc.querySelectorAll('.container img').forEach(img => {
-    const clone = img.cloneNode(true);
-    clone.className = img.className;   // conserver les classes
-    clone.src       = img.src;         // et la source
-    img.replaceWith(clone);
-  });
-
-  // 2) disable edit by default on all containers
+      // 2) disable edit by default on ALL .container
   const containers = Array.from(doc.querySelectorAll('.container'));
   containers.forEach(c => c.setAttribute('contentEditable','false'));
 
-  // 3) install delegated listeners in capture phase on each container
-  containers.forEach(container => {
-    container.removeEventListener('click',    onContainerClick, true);
-    container.addEventListener   ('click',    onContainerClick, true);
-    container.removeEventListener('dragstart',onImgDragStart, true);
-    container.addEventListener   ('dragstart',onImgDragStart, true);
-    container.removeEventListener('dragover', onContainerDragOver, true);
-    container.addEventListener   ('dragover', onContainerDragOver, true);
-    container.removeEventListener('drop',     onContainerDrop, true);
-    container.addEventListener   ('drop',     onContainerDrop, true);
-  });
+// 3) install delegated listeners on EACH container (useCapture pour le click)
+containers.forEach(container => {
+  // on enlève d'abord les éventuels anciens handlers en capture
+  container.removeEventListener('click', onContainerClick, true);
 
+  // puis on les remonte en capture
+  container.addEventListener('click',    onContainerClick, true);
+
+  // pour drag & drop, on peut aussi remonter en capture si besoin
+  container.removeEventListener('dragstart', onImgDragStart, true);
+  container.addEventListener('dragstart',     onImgDragStart, true);
+
+  container.removeEventListener('dragover',  onContainerDragOver, true);
+  container.addEventListener('dragover',      onContainerDragOver, true);
+
+  container.removeEventListener('drop',      onContainerDrop, true);
+  container.addEventListener('drop',          onContainerDrop, true);
+});
 
 
   // 4) intercept in-iframe nav links
