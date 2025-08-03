@@ -173,18 +173,25 @@ function onContainerClick(e) {
   const containers = Array.from(doc.querySelectorAll('.container'));
   containers.forEach(c => c.setAttribute('contentEditable','false'));
 
-  // 3) install delegated listeners on EACH container
-  containers.forEach(container => {
-    container.removeEventListener('click',    onContainerClick);
-    container.removeEventListener('dragstart',onImgDragStart);
-    container.removeEventListener('dragover', onContainerDragOver);
-    container.removeEventListener('drop',     onContainerDrop);
+// 3) install delegated listeners on EACH container (useCapture pour le click)
+containers.forEach(container => {
+  // on enlève d'abord les éventuels anciens handlers en capture
+  container.removeEventListener('click', onContainerClick, true);
 
-    container.addEventListener('click',    onContainerClick);
-    container.addEventListener('dragstart',onImgDragStart);
-    container.addEventListener('dragover', onContainerDragOver);
-    container.addEventListener('drop',     onContainerDrop);
-  });
+  // puis on les remonte en capture
+  container.addEventListener('click',    onContainerClick, true);
+
+  // pour drag & drop, on peut aussi remonter en capture si besoin
+  container.removeEventListener('dragstart', onImgDragStart, true);
+  container.addEventListener('dragstart',     onImgDragStart, true);
+
+  container.removeEventListener('dragover',  onContainerDragOver, true);
+  container.addEventListener('dragover',      onContainerDragOver, true);
+
+  container.removeEventListener('drop',      onContainerDrop, true);
+  container.addEventListener('drop',          onContainerDrop, true);
+});
+
 
   // 4) intercept in-iframe nav links
   doc.querySelectorAll('nav a').forEach(a => {
