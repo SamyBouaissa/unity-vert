@@ -186,6 +186,15 @@
     min-height: 0;
   }
 
+  /* — Remplace complètement cette règle par la suivante — */
+  .editor-title {
+    margin: 0;                      /* on vire tout margin ajouté ailleurs */
+    padding: 0;          /* on réduit le vertical à 0.25rem */
+    background: var(--bg-white);    /* fond blanc pour masquer le gris */
+    border-bottom: 1px solid var(--border);
+    font-size: 1.2rem;
+  }
+
   /* — Et, pour être sûr que derrière tout ça c’est blanc, ajoute : */
   .admin-main,
   .editor-pane {
