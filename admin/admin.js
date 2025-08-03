@@ -160,33 +160,35 @@ if (!isLogin) {
   `;
   doc.head.appendChild(override);
 
-    // 2) disable edit by default
-    const container = doc.querySelector('.container');
-    container?.setAttribute('contentEditable','false');
+      // 2) disable edit by default on ALL .container
+  const containers = Array.from(doc.querySelectorAll('.container'));
+  containers.forEach(c => c.setAttribute('contentEditable','false'));
 
-    // 3) install delegated listeners once
-    container?.removeEventListener('click',    onContainerClick);
-    container?.removeEventListener('dragstart',onImgDragStart);
-    container?.removeEventListener('dragover', onContainerDragOver);
-    container?.removeEventListener('drop',     onContainerDrop);
+  // 3) install delegated listeners on EACH container
+  containers.forEach(container => {
+    container.removeEventListener('click',    onContainerClick);
+    container.removeEventListener('dragstart',onImgDragStart);
+    container.removeEventListener('dragover', onContainerDragOver);
+    container.removeEventListener('drop',     onContainerDrop);
 
-    container?.addEventListener('click',    onContainerClick);
-    container?.addEventListener('dragstart',onImgDragStart);
-    container?.addEventListener('dragover', onContainerDragOver);
-    container?.addEventListener('drop',     onContainerDrop);
+    container.addEventListener('click',    onContainerClick);
+    container.addEventListener('dragstart',onImgDragStart);
+    container.addEventListener('dragover', onContainerDragOver);
+    container.addEventListener('drop',     onContainerDrop);
+  });
 
-    // 4) intercept in-iframe nav links
-    doc.querySelectorAll('nav a').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        const slug = a.getAttribute('href').replace('.html','');
-        document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
-        const target = document.querySelector(`.sidebar li[data-slug="${slug}"]`);
-        if (target) target.classList.add('active');
-        loadPage(slug);
-      });
+  // 4) intercept in-iframe nav links
+  doc.querySelectorAll('nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const slug = a.getAttribute('href').replace('.html','');
+      document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
+      const target = document.querySelector(`.sidebar li[data-slug="${slug}"]`);
+      if (target) target.classList.add('active');
+      loadPage(slug);
     });
   });
+});
 
   // Load a page into the iframe
   function loadPage(slug) {
