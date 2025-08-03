@@ -93,6 +93,7 @@ if (!isLogin) {
 
   // Dashboard elements
   let   currentSlug = pages[0].slug;
+  const editorTitle = document.getElementById('editor-title');
   const iframe      = document.getElementById('preview');
   const editBtn     = document.getElementById('edit-mode');
   const saveBtn     = document.getElementById('save-changes');
