@@ -1,116 +1,89 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unity Vert - Prestations</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- SUPABASE CLIENT -->
-    <script type="module">
-      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-      // Tes identifiants Supabase
-      const SUPABASE_URL = 'https://jkasolurdoqvdhukxzgm.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYXNvbHVyZG9xdmRodWt4emdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5MTE3NTAsImV4cCI6MjA2MzQ4Nzc1MH0.C817YgR525jvDxOkpbcFA2SRCYqieucrPvWqtWGLNSg';
-
-      // Création du client et exposé globalement
-      window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    </script>
-    <!-- /SUPABASE CLIENT -->
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unity Vert – Prestations</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Unity Vert</h1>
-        <p>Entretien et Aménagement d'Espace Vert</p>
-    </header>
-    <nav>
-        <a href="index.html">Accueil</a>
-        <a href="prestations.html">Prestations</a>
-        <a href="portfolio.html">Portfolio</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-    <img src="image.png" alt="Logo Unity Vert" class="image">
-    <div class="container">
-        <h2>Nos Prestations</h2>
-        <div class="prestations-layout">
-            <img src="prestations.jpg" alt="Nos Prestations" class="prestations-image">
-            <div class="prestations-text">
-                <h3>Entretien des Espaces Verts</h3>
-                <p>Nous proposons des services complets pour l'entretien de vos espaces verts, incluant la tonte des pelouses, le désherbage, le débroussaillage, la taille des haies et des arbustes, ainsi que l'évacuation des déchets végétaux. Nos jardiniers paysagistes s'occupent également du ramassage des feuilles et du fleurissement de vos jardins.</p>
+  <header>
+    <h1>Unity Vert</h1>
+    <p>Entretien et Aménagement d'Espace Vert</p>
+  </header>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="prestations.html">Prestations</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <img src="image.png" alt="Logo Unity Vert" class="image">
 
-                <h3>Aménagement Paysager</h3>
-                <p>Nos experts en aménagement paysager créent des espaces verts sur mesure, que ce soit pour un jardin, une terrasse, ou un parc. Nous nous occupons de la plantation de végétaux, la création de jardins et l'installation de systèmes d'arrosage automatique pour assurer la beauté et la santé de vos espaces extérieurs.</p>
-
-                <h3>Travaux Spécifiques</h3>
-                <p>Unity Vert offre aussi des services spécialisés tels que l'élagage des arbres, la pose de clôtures, et l'engazonnement. Nous prenons en compte les paramètres écologiques, économiques et esthétiques de chaque projet pour vous offrir un résultat optimal. 
-                    <br>De plus, nous proposons des <u>services à la personne</u> en collaboration avec la coopérative des jardiniers afin d'offrir des solutions personnalisées et adaptées à vos besoins spécifiques.
-                </p>
-
-                <p>Pour plus d'informations ou pour demander un devis, appelez-nous au <a href="tel:+33659268502"><strong>+33 6 59 26 85 02</strong></a>.</p>
-            </div>
-        </div>
+  <div class="container">
+    <h2>Nos Prestations</h2>
+    <div class="prestations-layout">
+      <img src="prestations.jpg" alt="Nos Prestations" class="prestations-image">
+      <div class="prestations-text">
+        <!-- … ton contenu statique ou édité via Supabase … -->
+      </div>
     </div>
+  </div>
 
-    <!-- Modal for displaying large images -->
-    <div id="modal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modal-img">
-    </div>
+  <!-- Modal lightbox -->
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img id="modal-img" class="modal-content">
+  </div>
 
-    <footer>
-        <p>Unity Vert | Email: <a href="mailto:unityvert@gmail.com">unityvert@gmail.com</a> | Téléphone: +33 6 59 26 85 02</p>
-    </footer>
+  <!-- Un seul script type=module pour tout gérer -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    <!-- JavaScript for image modal -->
-    <script>
-        const modal = document.getElementById('modal');
-        const modalImg = document.getElementById('modal-img');
-        const images = document.querySelectorAll('.prestations-image, .gallery img');
+    // — Supabase init —
+    const SUPABASE_URL      = 'https://jkasolurdoqvdhukxzgm.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdX...WqtWGLNSg';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        images.forEach(img => {
-            img.addEventListener('click', function() {
-                modal.style.display = 'block';
-                modalImg.src = this.src;
-            });
-        });
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1️⃣ Charger le contenu depuis Supabase
+      const slug = location.pathname.split('/').pop().replace('.html','') || 'index';
+      const { data, error } = await supabase
+        .from('pages_texts')
+        .select('content')
+        .eq('page_slug', slug)
+        .single();
+      if (!error && data?.content) {
+        document.querySelector('.container').innerHTML = data.content;
+      }
 
-        const span = document.getElementsByClassName('close')[0];
-        span.onclick = function() {
-            modal.style.display = 'none';
-        }
-    </script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const modal    = document.getElementById('modal');
-    const modalImg = document.getElementById('modal-img');
-    const images   = document.querySelectorAll('.prestations-image, .gallery img');
-    const closeBtn = modal.querySelector('.close');
+      // 2️⃣ Préparer la lightbox
+      const modal    = document.getElementById('modal');
+      const modalImg = document.getElementById('modal-img');
+      const closeBtn = modal.querySelector('.close');
 
-    // Ouvre la lightbox en ajoutant la classe .open et bloque le scroll
-    images.forEach(img => {
-      img.addEventListener('click', e => {
-        e.preventDefault();
-        modalImg.src = img.src;
+      function openModal(src) {
+        modalImg.src = src;
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      // 3️⃣ Écouteur délégué pour images & fermeture
+      document.body.addEventListener('click', e => {
+        // clic sur image de prestation ou galerie
+        if (e.target.matches('.prestations-image, .gallery img')) {
+          e.preventDefault();
+          openModal(e.target.src);
+        }
+        // clic sur croix ou en-dehors de l'image
+        else if (e.target === closeBtn || e.target === modal) {
+          closeModal();
+        }
       });
     });
-
-    // Fonction de fermeture réutilisable
-    function closeModal() {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    // Clic sur la croix
-    closeBtn.addEventListener('click', closeModal);
-
-    // Clic en dehors de l'image
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
-    });
-  });
-</script>
+  </script>
 </body>
 </html>
