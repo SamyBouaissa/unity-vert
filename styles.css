@@ -273,40 +273,37 @@ section:nth-of-type(even) {
         margin-right: 0;
     }
 }
-/* === Modal (plein écran, centré) === */
+/* ========== Modal caché par défaut ========== */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    width: 100vw;               /* toute la largeur */
-    height: 100vh;              /* toute la hauteur */
-    background-color: rgba(0, 0, 0, 0.9);
-    
-    /* passe en flex pour centrer l’image */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: none;               /* ne jamais couvrir la page tant que tu n’ouvres pas */
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.9);
 
-    /* plus de padding qui forçait du scroll */
-    padding: 0;
-    overflow: hidden;           /* plus de scroll externe */
+  /* centrage de l’image */
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  overflow: hidden;
 }
 
-/* === Contenu du modal : on force un fitting à l’écran === */
-.modal-content {
-    /* on retire width:80% et max-width:700px */
-    width: auto;
-    height: auto;
+/* quand tu veux l’afficher, ajoute .open */
+.modal.open {
+  display: flex;
+}
 
-    /* on contraint la taille au viewport */
-    max-width: 90vw;
-    max-height: 90vh;
-    
-    /* centre au cas où */
-    margin: 0 auto;
-    display: block;
+/* ========== Contenu du modal ========== */
+.modal-content {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  display: block;
 }
 
 .close {
