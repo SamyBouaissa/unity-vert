@@ -93,7 +93,6 @@ if (!isLogin) {
 
   // Dashboard elements
   let   currentSlug = pages[0].slug;
-  const editorTitle = document.getElementById('editor-title');
   const iframe      = document.getElementById('preview');
   const editBtn     = document.getElementById('edit-mode');
   const saveBtn     = document.getElementById('save-changes');
@@ -103,13 +102,23 @@ if (!isLogin) {
   let   draggedImg  = null;
 
   // Delegated image handlers
-  function onContainerClick(e) {
-    if (!editMode) return;
-    const img = e.target.closest('img.gallery-img');
-    if (!img) return;
-    e.preventDefault();
-    if (confirm('Supprimer cette image ?')) img.remove();
+function onContainerClick(e) {
+  if (!editMode) return;
+  const img = e.target.closest('img.gallery-img');
+  if (!img) return;
+
+  // 1) Empêche l’action native (ouverture de la lightbox)
+  e.preventDefault();
+  // 2) Bloque la bulle et tout autre listener
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  // 3) Ta pop-up de suppression
+  if (confirm('Supprimer cette image ?')) {
+    img.remove();
   }
+}
+
   function onImgDragStart(e) {
     if (!editMode) return;
     const img = e.target.closest('img.gallery-img');
