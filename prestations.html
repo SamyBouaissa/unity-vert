@@ -81,16 +81,35 @@
         }
     </script>
 <script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const slug = location.pathname.split('/').pop().replace('.html', '') || 'index';
-    const { data, error } = await supabase
-      .from('pages_texts')
-      .select('content')
-      .eq('page_slug', slug)
-      .single();
-    if (!error && data?.content) {
-      document.querySelector('.container').innerHTML = data.content;
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal    = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    const images   = document.querySelectorAll('.prestations-image, .gallery img');
+    const closeBtn = modal.querySelector('.close');
+
+    // Ouvre la lightbox en ajoutant la classe .open et bloque le scroll
+    images.forEach(img => {
+      img.addEventListener('click', e => {
+        e.preventDefault();
+        modalImg.src = img.src;
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Fonction de fermeture réutilisable
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
     }
+
+    // Clic sur la croix
+    closeBtn.addEventListener('click', closeModal);
+
+    // Clic en dehors de l'image
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
   });
 </script>
 </body>
